@@ -267,6 +267,31 @@ qq-bridge/
 - agent 的 Markdown 回复会转成纯文本（链接保留 `文字 (url)` 形式）
 - `@snowluma/sdk` 的 npm 发布版存在 ESM 扩展名 bug，本仓库通过 postinstall 补丁修复（见 `scripts/patch-snowluma-sdk.mjs`）
 
+## 运行证据（可回顾日志）
+
+README 描述的是「宣称」，真凭实据在运行期日志里，可事后核对：
+
+- `logs/health/<日期>.jsonl`：每次 `npm run health -- --persist` 追加一条记录，含**每个探针的真实延迟（ms）**与 24h 掉线/恢复统计（`scripts/health-check.mjs`）。
+- `logs/telemetry/<日期>.jsonl`：`npm run telemetry` 聚合「延迟/部署 + 近 7 天 token 花费」为一条快照（`scripts/telemetry-snapshot.mjs`）。
+- `state/token-usage.jsonl`：每步 token 原始账本；`npm run report:tokens` 出按会话/按天的成本表。
+- `state/crash.log` / `state/incidents.jsonl`：进程起停与看护掉线账本（health 的 24h 统计数据源）。
+
+建议把 `npm run health -- --persist` 与 `npm run telemetry` 挂到看护进程或系统 cron，周期运行即形成「在线 / 延迟 / 花费」证据链。
+
+## DSH 上游降级保底（策略 B）
+
+主回复路径跑在 DSH（本地代理 `:3080`）上，它背后的上游 provider（如 deepseek-official）一旦挂掉，整段 agent 运行时就不可达。桥接对此做了**纯降级**（不出本地回复，最保守）：
+
+- **检测**：`submitPromptWithTurnSlot` 包裹 `api.sessions.prompt`，按连接/超时/5xx/429 区分「上游不可达」，与「401/403 鉴权失败」分开（后者不算不可达，不误触发降级）。
+- **缓冲**：不可达时把未处理回合追加写入 `state/dsh-down-queue.jsonl`（含会话 key、内容、时间戳），不丢消息。
+- **状态提示**：用户聊天回合（`deliverPromptNow`）会往会话发一条可配置的状态提示（`cfg.dsh.degradedMode.notice`），并优雅返回，不会让用户看到崩溃或无限等待。
+- **恢复重投**：DSH 恢复后，由控制台或脚本把缓冲的回合补处理：
+  - 控制台：`GET /api/admin/dsh-queue`（查看队列）、`POST /api/admin/dsh-replay`（重投，需管理员令牌）。
+  - 脚本：`npm run dsh:queue`（查看）、`npm run dsh:replay`（重投）。
+- 开关与文案在 `config.json` 的 `dsh.degradedMode`（`enabled` / `notice`）配置；默认开启。
+
+> 说明：之前的诊断里提到的「11134」实为 Ollama 默认端口 11434，本策略 B 不实际调用它；本地 3B（`:18080`）只服务于唤醒判读/群记忆抽取/情绪分类，未接入主回复路径。
+
 ## 合规提醒
 
 SnowLuma 是独立第三方项目，与腾讯/QQ 无隶属关系，仅供学习与技术研究；使用前请阅读其 EULA 与《QQ 用户协议》。

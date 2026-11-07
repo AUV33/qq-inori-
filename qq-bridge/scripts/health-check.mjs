@@ -328,6 +328,28 @@ async function main() {
     incidentsText: readStateText('incidents.jsonl'),
   });
 
+  // [TELEMETRY-PERSIST] 部署/延迟证据落盘：--persist 时把本次探测（含每探针 ms 延迟）
+  // 与 24h 事件统计追加写入 logs/health/<日期>.jsonl，供事后回看（README 宣称对上证据）。
+  // 落盘失败只告警、不影响健康判定退出码。
+  if (args.has('--persist')) {
+    try {
+      const logDir = path.join(BRIDGE_DIR, 'logs', 'health');
+      fs.mkdirSync(logDir, { recursive: true });
+      let version = null;
+      try { version = JSON.parse(fs.readFileSync(path.join(BRIDGE_DIR, 'package.json'), 'utf8')).version; } catch { /* 读不到版本不影响落盘 */ }
+      const rec = {
+        at: new Date().toISOString(),
+        version,
+        ok,
+        events24h,
+        probes: results.map((r) => ({ id: r.id, label: r.label, status: r.status, ms: r.ms, detail: r.detail })),
+      };
+      fs.appendFileSync(path.join(logDir, `${new Date().toISOString().slice(0, 10)}.jsonl`), JSON.stringify(rec) + '\n', 'utf8');
+    } catch (error) {
+      console.error(`[health-check --persist] 落盘失败（不影响健康判定）：${error?.message ?? error}`);
+    }
+  }
+
   if (args.has('--json')) {
     console.log(JSON.stringify({ ok, checkedAt: new Date().toISOString(), events24h, results }, null, 2));
   } else {

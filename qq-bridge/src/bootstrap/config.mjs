@@ -84,6 +84,13 @@ export function loadConfig({ root, log }) {
       authPrefix: 'Bearer',
       // 是否允许把 DSH launch token 发往非回环地址（默认 false：那是进程启动凭据）
       allowRemote: false,
+      // [DEGRADED] DSH 上游/代理不可达时的降级保底（硬代价·二，策略 B）：
+      // 主回复路径 DSH 一掉，把未处理回合缓冲到 state/dsh-down-queue.jsonl 并给会话发一条状态提示，
+      // 不崩溃、不无限等待。DSH 恢复后由控制台 /api/admin/dsh-replay 重投缓冲的回合。
+      degradedMode: {
+        enabled: true,
+        notice: '⚠️ 上游大脑暂时连不上（DSH 不可达），你的消息已排队，恢复后我会补处理。',
+      },
       ...(file.dsh ?? {})
     },
     snowluma: { wsUrl: 'ws://127.0.0.1:3001', accessToken: '', ...(file.snowluma ?? {}) },

@@ -415,6 +415,7 @@ import { pickTalkingPeers, renderPeerBotLine } from './domain/social/peer-bots.m
 
 // [M-1] 消息入口状态机（收消息 → 去重/白名单/媒体/触发判定 → 投递）已抽出，懒构造
 import { createMessageIntake } from './domain/conversation/message-intake.mjs';
+import { DshUpstreamDownError, isDshUpstreamDown, bufferDshDown, replayDshDownQueue } from './domain/conversation/dsh-degraded.mjs';
 import { runIsolated as mailboxEnqueue, setCrashHandler, recoverMailbox } from './domain/conversation/session-mailbox.mjs';
 // [M5] 失败域心跳：某会话邮箱崩溃后 5s 自动尝试恢复并重放孤儿事件；其他会话不受影响。
 setCrashHandler((key) => setTimeout(() => { recoverMailbox(key).catch(() => {}); }, 5000));
@@ -1733,18 +1734,36 @@ async function main() {
    * 正常模型回合由 turn/start 消费 grant；直接命令没有 turn/start，必须在这里释放。
    */
   async function submitPromptWithTurnSlot({ sessionId, label, kind = 'background', content, useSlot = true, turnGrant = null }) {
-    return submitTurnPrompt({
-      sessionId,
-      label,
-      kind,
-      content,
-      useSlot,
-      turnGrant,
-      acquireTurnSlot,
-      bindTurnGrant,
-      releaseTurnGrant,
-      prompt: (request) => api.sessions.prompt(request),
-    });
+    try {
+      return await submitTurnPrompt({
+        sessionId,
+        label,
+        kind,
+        content,
+        useSlot,
+        turnGrant,
+        acquireTurnSlot,
+        bindTurnGrant,
+        releaseTurnGrant,
+        prompt: (request) => api.sessions.prompt(request),
+      });
+    } catch (error) {
+      if (isDshUpstreamDown(error) && cfg.dsh?.degradedMode?.enabled !== false) {
+        // [DEGRADED] DSH 上游/代理不可达：缓冲未处理回合，抛分类错误。
+        // 用户聊天投递（deliverPromptNow）据此发状态提示并优雅返回；
+        // 后台任务（slang/group-facts/isolated/task）照常失败，不影响主流程。
+        const text = Array.isArray(content)
+          ? content.map((p) => (p && typeof p.text === 'string' ? p.text : '')).join('\n')
+          : String(content ?? '');
+        try {
+          bufferDshDown({ stateDataPath, entry: { key: label, kind, sessionId, text } });
+        } catch (bufErr) {
+          if (typeof globalThis.__ignoredCatch === 'function') globalThis.__ignoredCatch(bufErr, 'app.mjs:submitPromptWithTurnSlot');
+        }
+        throw new DshUpstreamDownError(`DSH 上游不可达：${error?.message ?? error}`, { cause: error });
+      }
+      throw error;
+    }
   }
 
   // [SCHED] 原「后台让路」已由并发调度接管：对话有预留份额（turnReserveForChat），后台照常跑，不再空等。
@@ -2410,6 +2429,7 @@ const turnToolStats = new Map(); // sessionId -> {ok, fail, names}：一回合�
   // 模块内对 currentMode 等的赋值会写回这里的局部变量（不再有"两份状态"）。
   const consoleDeps = {
     get TUNE_PARAMS() { return TUNE_PARAMS; },
+    get dshReplay() { return dshReplay; },
     get applyTuning() { return applyTuning; },
     // [SELF-NARRATIVE] 她自己写的自述：控制台端点读写这一层
     get loadSelfNarrative() { return loadSelfNarrative; },
@@ -4704,6 +4724,17 @@ function appendToolLog(entry) {
   function handleIncoming(...args) {
     lastIncomingAt = Date.now(); // [FORCE-NAP] 有人在找她，强制小睡要等这波安静下来
     return getMessageIntake().handleIncoming(...args);
+  }
+
+  // [DEGRADED] DSH 恢复后，把缓冲的未处理回合（state/dsh-down-queue.jsonl）重投出去。
+  // 对应策略 B 的「缓冲」闭环：DSH 挂掉时入队的消息，恢复后由这里补处理。
+  async function dshReplay() {
+    if (!dshReady) return { ok: false, error: 'dsh-not-ready', replayed: 0 };
+    const { total, replayed, skipped } = await replayDshDownQueue({
+      stateDataPath,
+      replayOne: (key, text, knd) => deliverPromptNow(key, text, { wakeReason: null }),
+    });
+    return { ok: true, total, replayed, skipped };
   }
 
   // 挂起请求/拍一拍处理已搬到 pending-service.mjs（P3-RW-22）。

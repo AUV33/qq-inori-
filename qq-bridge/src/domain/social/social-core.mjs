@@ -1,4 +1,5 @@
 import { isDirectedAtAi as isDirectedAtAiPure } from '../leaves/inori-directed.js';
+import { DshUpstreamDownError } from '../conversation/dsh-degraded.mjs';
 // 社交核心：状态机、上下文块、活跃/退场提示、prompt 投递串行队列。
 //
 // 从 app.mjs 的 main() 搬出（P3-RW-25，2026-10-31）。social / socialV2 / promptQueues 仍是
@@ -338,6 +339,19 @@ export function createSocialCore(ctx) {
       });
     } catch (error) {
       if (opts.farewell) social.exitingSessions.delete(sessionId);
+      if (error instanceof DshUpstreamDownError) {
+        // [DEGRADED] DSH 上游不可达：状态提示 + 优雅返回，不让用户看到崩溃或无限等待。
+        // 未处理回合已在 submitPromptWithTurnSlot 内缓冲到 state/dsh-down-queue.jsonl，
+        // 待 DSH 恢复后由控制台 /api/admin/dsh-replay（dshReplay）重投。
+        // degradedMode.enabled 为 false 时不做降级，原样抛出（回到无降级行为）。
+        if (cfg.dsh?.degradedMode?.enabled !== false) {
+          const notice = cfg.dsh?.degradedMode?.notice
+            ?? '⚠️ 上游大脑暂时连不上（DSH 不可达），你的消息已排队，恢复后我会补处理。';
+          if (!opts.silent) { try { await sendNotice(key, notice); } catch { /* best-effort */ } }
+          return { ok: false, degraded: true, error: 'dsh-upstream-down' };
+        }
+        throw error;
+      }
       throw error;
     }
     if (!accepted.result.ok) {

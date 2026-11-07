@@ -48,6 +48,7 @@ import { roleRoutes } from './console-routes/roles.mjs';
 import { workRoutes } from './console-routes/works.mjs';
 import { tokenRoutes } from './console-routes/tokens.mjs';
 import { slangRoutes } from './console-routes/slang.mjs';
+import { adminRoutes } from './console-routes/admin.mjs';
 export function startConsoleServerCore(__deps) {
 
     const port = __deps.cfg.consolePort ?? 3100;
@@ -88,7 +89,7 @@ export function startConsoleServerCore(__deps) {
     const v2SessionAllowed = __deps.isSessionAllowedInCurrentMode;
     // [SPLIT 阶段3] method+pathname 路由表：已迁出的路由由此精确分发；
     // 未命中返回 null，下方 legacy ladder 继续处理（路由顺序/优先级不变）。
-    const router = createConsoleRouter([readOnlyRoutes, roleRoutes, workRoutes, tokenRoutes, slangRoutes]);
+    const router = createConsoleRouter([readOnlyRoutes, roleRoutes, workRoutes, tokenRoutes, slangRoutes, adminRoutes]);
     const server = __deps.http.createServer(async (req, res) => {
       let url;
       try { url = new URL(req.url ?? '/', `http://127.0.0.1:${port}`); }

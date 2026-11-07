@@ -9,7 +9,11 @@
     "authPrefix": "<填入你的authPrefix>",
     "allowRemote": false,
     "followDshModel": false,
-    "maxConcurrentTurns": 6
+    "maxConcurrentTurns": 6,
+    "degradedMode": {
+      "enabled": true,
+      "notice": "⚠️ 上游大脑暂时连不上（DSH 不可达），你的消息已排队，恢复后我会补处理。"
+    }
   },
   "life": {
     "mode": "shadow"
