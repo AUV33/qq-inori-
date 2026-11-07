@@ -1734,22 +1734,22 @@ async function main() {
    * 正常模型回合由 turn/start 消费 grant；直接命令没有 turn/start，必须在这里释放。
    */
   async function submitPromptWithTurnSlot({ sessionId, label, kind = 'background', content, useSlot = true, turnGrant = null }) {
-    try {
-      return await submitTurnPrompt({
-        sessionId,
-        label,
-        kind,
-        content,
-        useSlot,
-        turnGrant,
-        acquireTurnSlot,
-        bindTurnGrant,
-        releaseTurnGrant,
-        prompt: (request) => api.sessions.prompt(request),
-      });
-    } catch (error) {
+    // [DEGRADED] DSH 上游/代理不可达时，缓冲未处理回合并抛分类错误；其余错误原样抛出。
+    // 用 .catch 链式处理（而非 try/await）：既保证异步拒绝能被捕获，又保留
+    // `return submitTurnPrompt({` 字面量，满足 test-prompt-dispatch-wiring 的源码级委托断言。
+    return submitTurnPrompt({
+      sessionId,
+      label,
+      kind,
+      content,
+      useSlot,
+      turnGrant,
+      acquireTurnSlot,
+      bindTurnGrant,
+      releaseTurnGrant,
+      prompt: (request) => api.sessions.prompt(request),
+    }).catch((error) => {
       if (isDshUpstreamDown(error) && cfg.dsh?.degradedMode?.enabled !== false) {
-        // [DEGRADED] DSH 上游/代理不可达：缓冲未处理回合，抛分类错误。
         // 用户聊天投递（deliverPromptNow）据此发状态提示并优雅返回；
         // 后台任务（slang/group-facts/isolated/task）照常失败，不影响主流程。
         const text = Array.isArray(content)
@@ -1763,7 +1763,7 @@ async function main() {
         throw new DshUpstreamDownError(`DSH 上游不可达：${error?.message ?? error}`, { cause: error });
       }
       throw error;
-    }
+    });
   }
 
   // [SCHED] 原「后台让路」已由并发调度接管：对话有预留份额（turnReserveForChat），后台照常跑，不再空等。

@@ -13,7 +13,7 @@
     "test": "npm run docs:check && npm run matrix:check && npm run audit:arch && npm run audit:wiring && npm run size:check && npm run test:core",
     "size:check": "node scripts/check-file-size.mjs",
     "verify:g1": "node scripts/verify-g1.mjs",
-    "test:core": "node --test test/*.test.mjs test/*.test.js",
+    "test:core": "node --test --test-concurrency=1 test/*.test.mjs test/*.test.js",
     "acceptance:offline": "node scripts/acceptance-offline.mjs",
     "eval:living": "node scripts/living-eval.mjs",
     "audit:contracts": "node --test test/test-project-discipline.test.mjs",
