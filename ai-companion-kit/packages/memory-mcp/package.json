@@ -1,0 +1,33 @@
+{
+  "name": "memory-mcp",
+  "version": "0.1.0",
+  "description": "QQ Inori 长期记忆 MCP 服务器：按人/按群分库存取、写入查重、bge-m3 语义召回、认知与矛盾检测",
+  "type": "module",
+  "main": "src/memory-mcp.js",
+  "bin": {
+    "memory-mcp": "src/memory-mcp.js"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node src/memory-mcp.js",
+    "test": "node --test test/*.test.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "memory",
+    "ai-agent",
+    "companion"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0"
+  }
+}

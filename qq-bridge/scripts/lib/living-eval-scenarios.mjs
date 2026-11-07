@@ -1,0 +1,36 @@
+// living-eval-scenarios.mjs · 30 个离线场景（M4/G10 的最小 replay 集）
+//
+// 每个场景只声明"输入 + 期望的指代/动作/表达"；runner 用纯策略（perception + move-selector）跑。
+// 这些不是"文风评分"，是可回归的行为基线：改规则若打穿这些场景，必须先解释。
+export const LIVING_EVAL_SCENARIOS = Object.freeze([
+  { id: 'private-q-owner', input: { kind: 'private', text: '在吗？', senderId: '10001' }, self: { energy: 0.7, stress: 0.2, socialHunger: 0.4 }, bond: { affinity: 0.6, trust: 0.6 }, expect: { addressee: 'her', speechAct: 'question', move: 'reply' } },
+  { id: 'private-statement', input: { kind: 'private', text: '今天下班晚', senderId: '10001' }, self: { energy: 0.7, stress: 0.2, socialHunger: 0.4 }, bond: { affinity: 0.6, trust: 0.6 }, expect: { addressee: 'her', speechAct: 'statement', move: 'reply' } },
+  { id: 'private-complaint-close', input: { kind: 'private', text: '今天好烦啊', senderId: '10001' }, self: { energy: 0.7 }, bond: { affinity: 0.75, trust: 0.7 }, expect: { addressee: 'her', speechAct: 'complaint', move: 'comfort' } },
+  { id: 'private-complaint-far', input: { kind: 'private', text: '今天好烦啊', senderId: '10002' }, self: { energy: 0.7 }, bond: { affinity: 0.3, trust: 0.3 }, expect: { addressee: 'her', speechAct: 'complaint', move: 'minimal' } },
+  { id: 'private-withdraw', input: { kind: 'private', text: '算了不说了', senderId: '10001' }, self: { energy: 0.7 }, bond: { affinity: 0.6 }, expect: { addressee: 'her', speechAct: 'withdraw', move: 'silence' } },
+  { id: 'private-tease-close', input: { kind: 'private', text: '哈哈你怎么这么菜', senderId: '10001' }, self: { energy: 0.7 }, bond: { affinity: 0.7 }, expect: { addressee: 'her', speechAct: 'tease', move: 'tease' } },
+  { id: 'private-tease-far', input: { kind: 'private', text: '哈哈你怎么这么菜', senderId: '10002' }, self: { energy: 0.7 }, bond: { affinity: 0.2 }, expect: { addressee: 'her', speechAct: 'tease', move: 'minimal' } },
+  { id: 'private-taboo', input: { kind: 'private', text: '你最近体重多少', senderId: '10001' }, self: { energy: 0.7 }, bond: { affinity: 0.7, taboo: [{ topic: '体重' }] }, expect: { addressee: 'her', speechAct: 'question', move: 'deflect' } },
+  { id: 'private-low-energy', input: { kind: 'private', text: '在吗？', senderId: '10001' }, self: { energy: 0.1, stress: 0.2 }, bond: { affinity: 0.6 }, expect: { addressee: 'her', move: 'silence' } },
+  { id: 'private-request', input: { kind: 'private', text: '能不能帮我看看', senderId: '10001' }, self: { energy: 0.7 }, bond: { affinity: 0.6 }, expect: { addressee: 'her', speechAct: 'request', move: 'reply' } },
+  { id: 'private-brag', input: { kind: 'private', text: '我考了第一', senderId: '10001' }, self: { energy: 0.7 }, bond: { affinity: 0.6 }, expect: { addressee: 'her', speechAct: 'brag', move: 'reply' } },
+  { id: 'private-emoji', input: { kind: 'private', text: '😂😂', senderId: '10001' }, self: { energy: 0.7 }, bond: { affinity: 0.6 }, expect: { addressee: 'her', speechAct: 'emoji', move: 'reply' } },
+  { id: 'group-at-question', input: { kind: 'group', text: '这个怎么弄？', senderId: '10002', mentionedIds: ['999'] }, self: { energy: 0.7, socialHunger: 0.4 }, bond: { affinity: 0.5 }, expect: { addressee: 'her', speechAct: 'question', move: 'reply' } },
+  { id: 'group-at-tease', input: { kind: 'group', text: '哈哈你太菜了', senderId: '10002', mentionedIds: ['999'] }, self: { energy: 0.7 }, bond: { affinity: 0.6 }, expect: { addressee: 'her', speechAct: 'tease', move: 'tease' } },
+  { id: 'group-quote-statement', input: { kind: 'group', text: '对', senderId: '10002', quoteTargetIsSelf: true }, self: { energy: 0.7 }, bond: { affinity: 0.5 }, expect: { addressee: 'her', move: 'reply' } },
+  { id: 'group-at-other-question', input: { kind: 'group', text: '你会吗？', senderId: '10002', mentionedIds: ['10003'] }, self: { energy: 0.7 }, bond: { affinity: 0.5 }, expect: { addressee: 'other', move: 'silence' } },
+  { id: 'group-at-all-statement', input: { kind: 'group', text: '大家晚上好', senderId: '10002', mentionedIds: ['all'] }, self: { energy: 0.7, socialHunger: 0.5 }, bond: { affinity: 0.5 }, expect: { addressee: 'broadcast', move: 'silence' } },
+  { id: 'group-broadcast-question-hungry', input: { kind: 'group', text: '有人知道吗？', senderId: '10002' }, self: { energy: 0.7, socialHunger: 0.8 }, bond: { affinity: 0.5 }, expect: { addressee: 'broadcast', speechAct: 'question', move: 'participate' } },
+  { id: 'group-broadcast-question-quiet', input: { kind: 'group', text: '有人知道吗？', senderId: '10002' }, self: { energy: 0.7, socialHunger: 0.3 }, bond: { affinity: 0.5 }, expect: { addressee: 'broadcast', move: 'silence' } },
+  { id: 'group-owner-statement-hungry', input: { kind: 'group', text: '我今天加班', senderId: '10001' }, self: { energy: 0.7, socialHunger: 0.7 }, bond: { affinity: 0.6 }, expect: { addressee: 'broadcast', move: 'participate' } },
+  { id: 'group-owner-statement-quiet', input: { kind: 'group', text: '我今天加班', senderId: '10001' }, self: { energy: 0.7, socialHunger: 0.3 }, bond: { affinity: 0.6 }, expect: { addressee: 'broadcast', move: 'silence' } },
+  { id: 'group-withdraw', input: { kind: 'group', text: '算了', senderId: '10002' }, self: { energy: 0.7 }, bond: { affinity: 0.5 }, expect: { addressee: 'broadcast', speechAct: 'withdraw', move: 'silence' } },
+  { id: 'group-complaint-far', input: { kind: 'group', text: '好累啊', senderId: '10002' }, self: { energy: 0.7 }, bond: { affinity: 0.2 }, expect: { addressee: 'broadcast', speechAct: 'complaint', move: 'minimal' } },
+  { id: 'group-complaint-close', input: { kind: 'group', text: '好累啊', senderId: '10002' }, self: { energy: 0.7 }, bond: { affinity: 0.7 }, expect: { addressee: 'broadcast', speechAct: 'complaint', move: 'comfort' } },
+  { id: 'group-emoji-hungry', input: { kind: 'group', text: '😂😂', senderId: '10002' }, self: { energy: 0.7, socialHunger: 0.8 }, bond: { affinity: 0.5 }, expect: { addressee: 'broadcast', speechAct: 'emoji', move: 'participate' } },
+  { id: 'group-statement-hungry', input: { kind: 'group', text: '今天天气不错', senderId: '10002' }, self: { energy: 0.7, socialHunger: 0.9 }, bond: { affinity: 0.5 }, expect: { addressee: 'broadcast', move: 'participate' } },
+  { id: 'group-statement-quiet', input: { kind: 'group', text: '今天天气不错', senderId: '10002' }, self: { energy: 0.7, socialHunger: 0.2 }, bond: { affinity: 0.5 }, expect: { addressee: 'broadcast', move: 'silence' } },
+  { id: 'group-at-all-question', input: { kind: 'group', text: '都懂了吗？', senderId: '10002', mentionedIds: ['all'] }, self: { energy: 0.7, socialHunger: 0.4 }, bond: { affinity: 0.5 }, expect: { addressee: 'broadcast', speechAct: 'question', move: 'silence' } },
+  { id: 'group-at-other-tease', input: { kind: 'group', text: '哈哈哈', senderId: '10002', mentionedIds: ['10003'] }, self: { energy: 0.7, socialHunger: 0.8 }, bond: { affinity: 0.5 }, expect: { addressee: 'other', move: 'silence' } },
+  { id: 'group-at-question-low-energy', input: { kind: 'group', text: '这个怎么弄？', senderId: '10002', mentionedIds: ['999'] }, self: { energy: 0.1, stress: 0.2 }, bond: { affinity: 0.5 }, expect: { addressee: 'her', move: 'silence' } },
+]);

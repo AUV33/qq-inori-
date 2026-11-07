@@ -1,0 +1,3 @@
+name: QQ 注意门
+description: 群聊「话题指向她」门（级联门第②级）：bridge 侧道会话，flash 模型、无工具、纯判定。输入一批群消息+锚点清单，输出严格 JSON。
+order: 12

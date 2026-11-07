@@ -1,0 +1,47 @@
+{
+  "// 注意": "这套是独立陪聊程序，和 qq-bridge+DSH 是二选一，不要同时运行（会抢同一个 OneBot 连接）",
+  "apiKey": "<填入你的apiKey>",
+  "baseUrl": "https://api.deepseek.com/v1",
+  "model": "deepseek-flash",
+  "roleCard": "role.md",
+  "roleMaxChars": "<填入你的roleMaxChars>",
+  "names": [
+    "水濑祈"
+  ],
+  "keywords": [
+    "<填入你的keywords[0]>",
+    "<填入你的keywords[1]>"
+  ],
+  "ownerIds": [],
+  "onebot": {
+    "wsUrl": "ws://127.0.0.1:3001",
+    "httpUrl": "http://127.0.0.1:3000",
+    "accessToken": "<填入你的accessToken>"
+  },
+  "wake": {
+    "groupAtOnly": true,
+    "probability": 0.05,
+    "privateWindowMs": 1500,
+    "groupWindowMs": 6000
+  },
+  "humanize": {
+    "enabled": true,
+    "msPerChar": 85,
+    "minMs": 1200,
+    "maxMs": 6000,
+    "jitter": 0.2,
+    "burstMax": 4,
+    "gapRange": [
+      700,
+      2600
+    ],
+    "longGapChance": 0.25,
+    "longGapRange": [
+      3000,
+      9000
+    ]
+  },
+  "dataDir": "data",
+  "diaryDir": "data/diary",
+  "diaryMaxChars": 2000
+}

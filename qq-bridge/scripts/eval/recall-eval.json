@@ -1,0 +1,20 @@
+[
+  { "query": "方舟基建换班要看什么", "expect": "基建技能", "scope": "private", "note": "基建要求" },
+  { "query": "三间制造站是不是都改好了", "expect": "搓赤金", "scope": "private", "note": "基建进度" },
+  { "query": "我说过晚安又去玩手机", "expect": "再去玩手机", "scope": "private", "note": "被抓包" },
+  { "query": "他让我拿他的钱去炒股", "expect": "一百块", "scope": "private", "note": "炒股" },
+  { "query": "这个角色名是声优的名字吗", "expect": "声优", "scope": "private", "note": "名字来源" },
+  { "query": "方舟理智能满了吗 主线打到哪", "expect": "理智205", "scope": "private", "note": "方舟进度" },
+  { "query": "手机点击的工具怎么都用不了了", "expect": "点击类工具", "scope": "private", "note": "工具停用" },
+  { "query": "他给自己的AI装记忆 来问我", "expect": "给自己的AI装上记忆", "scope": "private", "note": "装记忆" },
+  { "query": "新来的AI怎么加进联系人的", "expect": "白名单", "scope": "private", "note": "示例bot白名单" },
+  { "query": "他在空间发了个生日限时活动", "expect": "限时小活动", "scope": "private", "note": "空间动态" },
+  { "query": "贸易站订单清空了吗", "expect": "贸易站订单清空", "scope": "private", "note": "基建打扫" },
+  { "query": "他说他没钱吃好的", "expect": "没钱吃好的", "scope": "private", "note": "穷" },
+  { "query": "生日那天让我拿钱去炒股的是哪条", "expect": "生日这天说穷", "scope": "private", "note": "近重复-生日炒股" },
+  { "query": "25号晚上想问他明天吃什么没发出去", "expect": "明天想吃点什么", "scope": "private", "note": "近重复-没发出去" },
+  { "query": "他说下周一生日是哪天", "expect": "下周一生日", "scope": "private", "note": "近重复-生日日期" },
+  { "query": "绘画教程那次我说了什么", "expect": "绘画过程和教学视频", "scope": "private", "note": "近重复-日志" },
+  { "query": "手机点击工具被停用那天的日志", "expect": "点击类工具", "scope": "private", "note": "近重复-日志" },
+  { "query": "理智205那次基建收拾了哪些东西", "expect": "贸易站订单清空", "scope": "private", "note": "近重复-基建" }
+]

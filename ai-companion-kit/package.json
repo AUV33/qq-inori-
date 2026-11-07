@@ -1,0 +1,32 @@
+{
+  "name": "ai-companion-kit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "QQ Inori 的扩展包：记忆、日记、安卓手机、QQ 空间与生活节奏",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "demo": "node packages/companion/examples/demo.js",
+    "phone": "node packages/phone-mcp/src/phone-mcp.js",
+    "phone:test": "node packages/phone-mcp/src/phone-mcp.js --selftest",
+    "qzone": "node packages/qzone/open-zone.mjs",
+    "qzone:test": "node packages/qzone-mcp/src/qzone-mcp.js --selftest",
+    "test": "node --test packages/memory-mcp/test/browse-tool.test.mjs packages/memory-mcp/test/feed-tool.test.mjs",
+    "typecheck": "npx -y typescript@5 --noEmit -p tsconfig.json"
+  },
+  "keywords": [
+    "ai",
+    "companion",
+    "mcp",
+    "qq",
+    "android",
+    "memory",
+    "persona"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  }
+}

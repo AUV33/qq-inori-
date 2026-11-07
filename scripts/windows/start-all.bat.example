@@ -1,0 +1,26 @@
+@echo off
+REM ============================================================
+REM 启动示例（Windows）。复制成 scripts\windows\start-all.bat 后按本机改。
+REM 1) 把 REPO 改成仓库根目录；2) 嵌入 / DSH / SnowLuma 按需保留。
+REM 本文件不含真实账号、路径和令牌；不要把你的 config.json 提交进仓库。
+REM ============================================================
+setlocal
+set REPO=<你的仓库路径>
+if not exist "%REPO%\qq-bridge" (
+  echo [x] REPO 没指向仓库根：%REPO%
+  exit /b 1
+)
+
+REM 1) 本地 embedding（可选；已经有外部嵌入服务就删掉这一段）
+REM    set INORI_EMBED_EXE=<llama-server.exe 路径>
+REM    set INORI_EMBED_MODEL=<bge-m3 的 .gguf 路径>
+REM    start "" /min "%INORI_EMBED_EXE%" -m "%INORI_EMBED_MODEL%" --embedding --pooling cls -c 8192 --host 127.0.0.1 --port 8790 -ngl 99 --no-webui
+
+REM 2) DSH Web（默认 3080）
+REM    start "" /min cmd /c "dsh web"
+
+REM 3) SnowLuma：自行启动，用小号扫码（本仓库不分发，见 docs/PUBLISHING.md）
+
+REM 4) 桥接
+cd /d "%REPO%\qq-bridge"
+node src\bridge.js

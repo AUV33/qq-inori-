@@ -1,0 +1,109 @@
+# ── 私有运行数据（绝不提交）────────────────────────────────────────────
+qq-bridge/config.json
+qq-bridge/config.json.*
+qq-bridge/state/
+qq-bridge/data/
+qq-bridge/allowlist.txt
+qq-bridge/roles/*.md
+qq-bridge/roles/*.bak*
+qq-bridge/_tmp/
+qq-bridge/undefined/
+qq-bridge/archive/
+qq-bridge/node_modules/
+qq-bridge/logs/
+qq-bridge/error.log
+qq-bridge/crash.log
+
+data/
+state/
+logs/
+media/
+workspaces/
+snowluma/
+models/
+ops/
+tools/
+_archive/
+_trash/
+_tmp/
+.tmp/
+_src/
+archive/
+.acl-recovery/
+.dsh-pilot/
+nul
+
+# 文档：开源仓库仅保留根 README 与 LICENSE，其余文档（含 docs/ 全部内容）不入库
+docs/
+CONTRIBUTING.md
+NOTICE.md
+SECURITY.md
+
+# 本机启动脚本（含作者机器路径/计划任务）
+*.bat
+*.vbs
+*.ps1
+!qq-bridge/start.bat
+!qq-bridge/restart.bat
+
+# 依赖与构建产物
+**/node_modules/
+**/.venv/
+**/dist/
+**/build/
+**/out/
+**/.cache/
+**/__pycache__/
+**/*.pyc
+**/*.map
+
+# 日志、备份、临时文件
+*.log
+*.bak
+*.bak-*
+*.old
+*.pid
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# 本地媒体和大文件
+**/*.mp4
+**/*.mov
+**/*.mkv
+**/*.wav
+**/audio/
+**/*.safetensors
+**/*.gguf
+**/*.ckpt
+
+# 个人扩展包配置
+ai-companion-kit/config.json
+ai-companion-kit/role.md
+ai-companion-kit/**/config.json
+ai-companion-kit/**/role.md
+ai-companion-kit/**/node_modules/
+
+# 测试/调试产物
+qq-bridge/test-output/
+qq-bridge/_tmp*/
+qq-bridge/.tmp-*/
+**/_tmp*.mjs
+**/restart-out/
+
+# 助手/工具工作产物与本机令牌（不进仓库）
+.ai-memory/
+.codebuddy/
+**/.vision-token
+
+# 绑定作者本机数据的一次性核查脚本
+qq-bridge/scripts/verify-claims-20261027.mjs
+
+# 运行期产物（日志/候选，不进版本库）
+qq-bridge/lesson-candidates.jsonl
+qq-bridge/reasoning-log.jsonl
+/tmp/

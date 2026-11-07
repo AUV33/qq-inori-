@@ -1,0 +1,13 @@
+@echo off
+REM ============================================================
+REM 停止示例（Windows）。按端口停本项目默认监听；别的进程不动。
+REM 复制成 scripts\windows\stop-all.bat 后按本机端口改。
+REM ============================================================
+setlocal
+for %%P in (3100 3080 3000 3001 8790) do (
+  for /f "tokens=5" %%I in ('netstat -ano ^| findstr "LISTENING" ^| findstr ":%%P "') do (
+    echo [stop] port %%P pid %%I
+    taskkill /PID %%I /F >nul 2>nul
+  )
+)
+echo done.

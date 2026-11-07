@@ -1,0 +1,533 @@
+{
+  "dsh": {
+    "baseUrl": "http://127.0.0.1:3080",
+    "provider": "deepseek-official",
+    "model": "deepseek-flash",
+    "reasoningEffort": "low",
+    "authToken": "<填入你的authToken>",
+    "authHeader": "<填入你的authHeader>",
+    "authPrefix": "<填入你的authPrefix>",
+    "allowRemote": false,
+    "followDshModel": false,
+    "maxConcurrentTurns": 6
+  },
+  "life": {
+    "mode": "shadow"
+  },
+  "role": {
+    "maxInjectChars": 9000
+  },
+  "snowluma": {
+    "wsUrl": "ws://127.0.0.1:3001",
+    "httpUrl": "http://127.0.0.1:3000",
+    "accessToken": "<填入你的accessToken>",
+    "launcherPath": "",
+    "homeDir": "<本地绝对路径>"
+  },
+  "ownerQQ": "<你的QQ号>",
+  "sessionCwd": "<填入你的sessionCwd>",
+  "agentPreset": "qq-chat",
+  "workspaceTitle": "水濑祈",
+  "allow": {
+    "private": [
+      "<你的QQ号>",
+      "<你的QQ号>",
+      "<你的QQ号>"
+    ],
+    "groups": [
+      "<你的QQ号>",
+      "<你的QQ号>"
+    ]
+  },
+  "deny": {
+    "private": [],
+    "groups": []
+  },
+  "allowAllWhenEmpty": false,
+  "ackMessage": "",
+  "sendDelayMs": 300,
+  "questionTimeoutMs": "<你的QQ号>",
+  "consolePort": 3100,
+  "consoleToken": "<填入你的consoleToken>",
+  "background": {
+    "maxPerHour": 6,
+    "windowMs": "<你的QQ号>",
+    "queueTimeoutMs": "<你的QQ号>",
+    "exemptKinds": [
+      "gate",
+      "ownlife",
+      "reflect",
+      "diary"
+    ]
+  },
+  "turnPriority": {
+    "highKinds": [
+      "gate",
+      "vision"
+    ],
+    "lowKinds": [
+      "intake",
+      "slang",
+      "groupfact"
+    ],
+    "high": 40,
+    "normal": 20,
+    "low": 10
+  },
+  "resources": {
+    "enabled": true,
+    "observeOnly": true,
+    "minFreeMemMB": 1536,
+    "maxCpuPercent": 80,
+    "sampleMs": "<你的QQ号>"
+  },
+  "tokenLedger": {
+    "dailyCapCny": 40,
+    "capExemptKinds": [
+      "gate"
+    ]
+  },
+  "pricing": {
+    "models": {
+      "my-relay-model": {
+        "label": "我的中转模型",
+        "off": {
+          "cacheHit": 0.5,
+          "cacheMiss": 3,
+          "output": 9
+        }
+      }
+    }
+  },
+  "security": {
+    "interceptNotify": true
+  },
+  "slang": {
+    "enabled": true,
+    "extractMinMessages": 10,
+    "extractCooldownMs": "<你的QQ号>",
+    "inferenceThresholds": [
+      1,
+      2,
+      4
+    ],
+    "injectMax": 4,
+    "learnerPreset": "qq-chat",
+    "workspaceTitle": "QQ 黑话学习",
+    "autoResearch": true,
+    "autoPromote": {
+      "enabled": true,
+      "minCount": 2
+    },
+    "judgeListMax": 3,
+    "urgentMaxPerHour": 3,
+    "urgentCooldownMs": "<你的QQ号>"
+  },
+  "social": {
+    "enabled": false,
+    "maxReplyChars": 500,
+    "mustReplyKeywords": [
+      "<填入你的mustReplyKeywords[0]>",
+      "<填入你的mustReplyKeywords[1]>",
+      "<填入你的mustReplyKeywords[2]>"
+    ],
+    "contextWindow": 20,
+    "triggerProbability": 0.1,
+    "activeCheckMinMs": 8000,
+    "activeCheckMaxMs": "<你的QQ号>",
+    "idleWindowMs": "<你的QQ号>",
+    "idleRetryProbability": 0.4,
+    "proactiveEnabled": true,
+    "proactiveIdleThresholdMs": "<你的QQ号>",
+    "proactiveCheckMinMs": "<你的QQ号>",
+    "proactiveCheckMaxMs": "<你的QQ号>",
+    "proactiveProbability": 0.2,
+    "activeReplyDelayMinMs": 1000,
+    "activeReplyDelayMaxMs": 5000,
+    "activeDurationEnabled": true,
+    "activeDurationMinMs": "<你的QQ号>",
+    "activeDurationMaxMs": "<你的QQ号>",
+    "skipProbability": 0.05,
+    "surrenderProbability": 0,
+    "idleRetryWaitMs": "<你的QQ号>",
+    "burstEnabled": true,
+    "burstIntervalMinMs": 1500,
+    "burstIntervalMaxMs": 4000,
+    "longGapProbability": 0.2,
+    "longGapMinMs": 5000,
+    "longGapMaxMs": "<你的QQ号>"
+  },
+  "socialV2": {
+    "enabled": true,
+    "autoReplyCheckMs": "<你的QQ号>",
+    "agentPreset": "qq-chat-v2",
+    "knownBots": [
+      "<你的QQ号>"
+    ],
+    "provideRecommendations": true,
+    "tools": {
+      "getPrompt": true,
+      "getUnread": true,
+      "getRecent": true,
+      "socialState": true,
+      "sendGroup": true,
+      "sendPrivate": true,
+      "reply": true,
+      "sendBurst": true,
+      "sendMessage": true,
+      "waitMessages": true,
+      "feedback": true,
+      "getMyRecent": true,
+      "getMessageDetail": true,
+      "getActiveMembers": true,
+      "setWakeConfig": true,
+      "markRead": true,
+      "memory": true,
+      "slangQuery": true,
+      "slangSubmit": true,
+      "getImages": true,
+      "getForwardMsg": true,
+      "sendPoke": true,
+      "listStickers": true,
+      "getStickerImage": true,
+      "sendSticker": true,
+      "setStickerRemark": true,
+      "stickerNote": true,
+      "collectSticker": true,
+      "getSelfImage": true,
+      "sendVoice": false,
+      "slangJudge": true,
+      "person": true,
+      "curiosity": true,
+      "dayPlan": true,
+      "selfNote": true,
+      "intention": true,
+      "language": true,
+      "hostAction": true,
+      "wish": true,
+      "selfWake": true,
+      "ownLifeRhythm": true,
+      "myDay": true,
+      "workshop": true,
+      "image": true,
+      "memoryList": true,
+      "memoryEdit": true,
+      "selfEdit": true,
+      "lessonVote": true,
+      "works": true,
+      "groupAdmin": false,
+      "quant": true
+    },
+    "taskPool": {
+      "maxParallel": 2,
+      "taskMaxMs": "<你的QQ号>",
+      "queueMax": 8,
+      "preset": "qq-chat-admin",
+      "reasoningEffort": "low"
+    },
+    "wake": {
+      "defaultMode": "diving",
+      "preSleepWaitEnabled": true,
+      "preSleepWaitMs": "<你的QQ号>",
+      "recommendedDefaultInfinite": true,
+      "sleepMinMs": "<你的QQ号>",
+      "sleepMaxMs": 0,
+      "recommendedSleepMinMs": "<你的QQ号>",
+      "recommendedSleepMaxMs": "<你的QQ号>",
+      "recommendedProbability": 0.06,
+      "recommendedKeywords": [
+        "<填入你的recommendedKeywords[0]>",
+        "<填入你的recommendedKeywords[1]>",
+        "<填入你的recommendedKeywords[2]>",
+        "<填入你的recommendedKeywords[3]>",
+        "<填入你的recommendedKeywords[4]>"
+      ],
+      "recommendedAtMention": true,
+      "recommendedNameMention": true,
+      "recommendedQuestion": true,
+      "recommendedPoke": true,
+      "recommendedHint": "如果你要潜水，推荐先调用 qq_wait_for_messages(timeoutMs=60000) 完成一次沉睡前观察：1 分钟内没人说话就可以设置下一次唤醒并沉睡；若期间有人发新消息，先查看 newMessages，判断不需要你参与可直接沉睡，若参与了则下次想睡需再等观察窗口。潜水时长推荐 5~120 分钟，普通消息概率 0.05；@/名字/关键词/提问唤醒建议保持开启。需要等特定某人/某几人时，可额外设置 triggers.speakerIds。",
+      "batchWindowMs": 5000,
+      "maxWakePerMinute": 3,
+      "maxWakePerHour": 40,
+      "noActionLimit": 3,
+      "maxWakeConfigReminders": 2,
+      "recommendedKeyword": true,
+      "turnMaxMs": "<你的QQ号>",
+      "busyStaleMs": "<你的QQ号>",
+      "busyCheckMs": "<你的QQ号>",
+      "autoReplyCheckMs": "<你的QQ号>",
+      "pendingRetryMs": "<你的QQ号>"
+    },
+    "send": {
+      "burstEnabled": true,
+      "burstMaxMessages": 3,
+      "burstIntervalMinMs": 1500,
+      "burstIntervalMaxMs": 4000,
+      "longGapProbability": 0.35,
+      "longGapMinMs": 5000,
+      "longGapMaxMs": "<你的QQ号>",
+      "maxSendPerMinute": 8,
+      "maxSendPerHour": 60,
+      "maxMessageChars": 800,
+      "maxGapMs": "<你的QQ号>",
+      "gapBaseMs": 1800,
+      "gapPerCharMs": 40,
+      "recommendedHint": "单条消息不要用空格断句，中文短句用逗号/顿号或直接连写；分条时每条都要读起来完整，不要把同一句话拆到两条里；普通闲聊建议一次 1~3 条，条间 1~3 秒；讲故事/回忆可以 5~10 秒间隔；不要连续刷屏。",
+      "quoteFix": false,
+      "clauseSplit": {
+        "enabled": false,
+        "minTotalChars": 12,
+        "maxBubbles": 2,
+        "minClauseChars": 3
+      }
+    },
+    "wait": {
+      "defaultMs": "<你的QQ号>",
+      "minMs": 5000,
+      "maxMs": "<你的QQ号>",
+      "defaultQuietMs": 8000,
+      "minQuietAfterNewMs": 2000
+    },
+    "sticker": {
+      "enabled": true,
+      "syncTtlMs": "<你的QQ号>",
+      "maxListCount": 100,
+      "includeInPrompt": true,
+      "promptMaxStickers": 8,
+      "collect": {
+        "enabled": true,
+        "maxPerMinute": 2,
+        "maxPerHour": 10,
+        "maxRemarkChars": 20
+      },
+      "autoCollect": {
+        "enabled": false,
+        "maxPerDay": 5,
+        "maxAgeMs": "<你的QQ号>",
+        "maxPerHour": 2,
+        "minIntervalMs": "<你的QQ号>"
+      }
+    },
+    "voice": {
+      "enabled": false,
+      "dir": "audio",
+      "maxSeconds": 300,
+      "maxBytes": "<你的QQ号>",
+      "maxPerMinute": 2,
+      "maxPerHour": 10,
+      "allowAbsolutePath": false,
+      "defaultVolume": 1,
+      "loudness": "normal",
+      "ffmpegPath": "",
+      "autoReadback": true
+    },
+    "proactive": {
+      "enabled": true,
+      "checkIntervalMinMs": "<你的QQ号>",
+      "checkIntervalMaxMs": "<你的QQ号>",
+      "idleThresholdMs": "<你的QQ号>",
+      "probability": 0.3,
+      "join": {
+        "enabled": true,
+        "minOthers": 8,
+        "silentMs": "<你的QQ号>",
+        "minGapMs": "<你的QQ号>",
+        "maxPerHour": 3,
+        "minAdaptive": 0.12,
+        "baseProb": 0.3,
+        "maxProb": 0.6
+      },
+      "engagement": {
+        "enabled": true,
+        "windowMs": "<你的QQ号>",
+        "minGapMs": "<你的QQ号>",
+        "maxPerHour": 12,
+        "requireNewOthers": 1
+      }
+    },
+    "feedback": {
+      "maxLength": 500,
+      "notifyOwnerOnError": false
+    },
+    "context": {
+      "recentLimit": 100,
+      "unreadLimit": 30,
+      "contextWindow": 20,
+      "inlineWakeMessages": true,
+      "wakeMessageLimit": 20,
+      "wakeRecentLimit": 8,
+      "wakeMaxChars": 6000,
+      "maxSessionTurns": 30
+    },
+    "memoryInject": {
+      "limit": 5,
+      "sharePrivate": true,
+      "shareGroup": true,
+      "searchArchive": true,
+      "activityPool": true
+    },
+    "recoveryWindowMs": "<你的QQ号>",
+    "chase": {
+      "enabled": true,
+      "minMs": "<你的QQ号>",
+      "maxMs": "<你的QQ号>",
+      "maxPerDay": 3,
+      "adapt": {
+        "minSamples": 3
+      }
+    },
+    "reflection": {
+      "enabled": true,
+      "hourStart": 2,
+      "hourEnd": 5,
+      "cooldownHours": 24,
+      "minLessons": 0,
+      "maxLessons": 1,
+      "maxRetries": 2,
+      "retryAfterMs": "<你的QQ号>",
+      "outcomeCheckMs": "<你的QQ号>",
+      "maxGoalsRetries": 2
+    },
+    "intake": {
+      "enabled": true,
+      "linkRead": true,
+      "maxLinks": 2,
+      "minGapMs": "<你的QQ号>",
+      "wakeWaitMs": 2500
+    },
+    "aboutSelf": {
+      "enabled": true,
+      "otherAiNames": [
+        "示例AI"
+      ],
+      "aliases": [
+        "水濑祈",
+        "水濑",
+        "小祈",
+        "祈祈",
+        "祈姐",
+        "祈宝",
+        "濑祈",
+        "祈酱",
+        "阿祈",
+        "祈子",
+        "いのり",
+        "inori"
+      ],
+      "typo": [
+        "水赖",
+        "水籁",
+        "水懒",
+        "水奈祈",
+        "尹诺丽",
+        "依诺丽",
+        "稀诺丽"
+      ],
+      "singleCharBlock": [
+        "祈祷",
+        "祈求",
+        "祈愿",
+        "祈使",
+        "祈盼",
+        "祈禱"
+      ]
+    },
+    "digest": {
+      "enabled": true
+    },
+    "atSplit": {
+      "enabled": true,
+      "maxPerWake": 3,
+      "gapMinMs": 6000,
+      "gapMaxMs": "<你的QQ号>"
+    },
+    "memoryRerank": {
+      "enabled": false,
+      "url": "http://127.0.0.1:8792/rerank",
+      "topK": 12,
+      "timeoutMs": 800
+    },
+    "memory": {
+      "groupFactsLlm": {
+        "enabled": true,
+        "minGapMs": "<你的QQ号>",
+        "max": 5
+      }
+    },
+    "affect": {
+      "enabled": true,
+      "groupInject": true,
+      "groupMinConfidence": 0.6,
+      "hedgeMin": 0.35,
+      "ruleMin": 0.5,
+      "modelMin": 0.55,
+      "timeoutMs": "<你的QQ号>",
+      "localPort": "<你的QQ号>",
+      "localIdleMs": "<你的QQ号>",
+      "localCtx": 2048,
+      "localNgl": 99,
+      "localModelPath": "<本地绝对路径>"
+    }
+  },
+  "ownLife": {
+    "intervalMs": "<你的QQ号>",
+    "maxPerDay": 0,
+    "minPerDay": 2
+  },
+  "gate": {
+    "enabled": true,
+    "embedPort": 8790,
+    "embedBase": "",
+    "embedExe": "<本地绝对路径>",
+    "embedModel": "<本地绝对路径>",
+    "embedModelName": "bge-m3",
+    "embedBatch": 16,
+    "cosThreshold": 0.55,
+    "mindBias": true,
+    "minPending": 5,
+    "intervalMs": "<你的QQ号>",
+    "batchMax": 20,
+    "keepLogLines": 400,
+    "model": {
+      "provider": "deepseek-official",
+      "model": "deepseek-flash"
+    },
+    "embedCtx": 8192,
+    "embedUb": 2048
+  },
+  "imagegen": {
+    "enabled": true,
+    "binPath": "tools/sd-vulkan/sd-server.exe",
+    "modelPath": "tools/sd-models/anything-v3-q8.gguf",
+    "host": "127.0.0.1",
+    "port": 8189,
+    "width": 512,
+    "height": 768,
+    "steps": 24,
+    "cfgScale": 7,
+    "idleMs": "<你的QQ号>",
+    "minFreeMemMB": 700,
+    "maxPerHour": 12,
+    "timeoutMs": "<你的QQ号>",
+    "startupTimeoutMs": "<你的QQ号>"
+  },
+  "quant": {
+    "enabled": true,
+    "market": "crypto",
+    "dataBaseUrl": "https://data-api.binance.vision",
+    "quote": "USDT",
+    "initialCapitalCny": 100,
+    "cnyPerUsdt": 7.1,
+    "feeRate": 0.001,
+    "slippageBps": 5,
+    "minNotionalUsdt": 5,
+    "requestTimeoutMs": 8000,
+    "risk": {
+      "maxPositionPct": 0.5,
+      "maxDailyLossPct": 0.1,
+      "maxTradesPerDay": 10,
+      "maxOpenPositions": 2
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowJs": true,
+    "checkJs": false,
+    "noEmit": true,
+    "strict": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "types/globals.d.ts",
+    "packages/memory-mcp/src/ssrf-safe.js",
+    "packages/memory-mcp/src/browse-tool.js",
+    "packages/memory-mcp/src/feed-tool.js"
+  ]
+}

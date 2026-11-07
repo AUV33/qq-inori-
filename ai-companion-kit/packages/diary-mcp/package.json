@@ -1,0 +1,32 @@
+{
+  "name": "diary-mcp",
+  "version": "0.1.0",
+  "description": "QQ Inori 日记 MCP 服务器：写一条、看最近几条、按天导出（故意不提供删除/改过去）",
+  "type": "module",
+  "main": "src/diary-mcp.js",
+  "bin": {
+    "diary-mcp": "src/diary-mcp.js"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node src/diary-mcp.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "diary",
+    "ai-agent",
+    "companion"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "zod": "^3.23.0"
+  }
+}

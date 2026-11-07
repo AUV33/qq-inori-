@@ -1,0 +1,6 @@
+- insert:
+    - id: inori-status
+      name: '@local/inori-status'
+      config:
+        # 仓库根目录；留空则用 QQ_INORI_ROOT，否则按插件位置推导（<repo>/dsh-plugins/inori-status → <repo>）。
+        root: ''
