@@ -324,6 +324,11 @@ export async function bridgeHarness({ config = {}, savedState, globals = {} } = 
   source = source.replace(/^export\s*\{[^}]*\}\s*;?\s*$/gm, '');
   source = source.replaceAll('import.meta.url', JSON.stringify(pathToFileURL(path.join(temp, 'src/bridge.js')).href));
   source = source.slice(0, source.indexOf("process.on('SIGINT'"));
+  // [HARNESS-FIX] 不要在 main() 里自动起控制台 server：每个测试各自用 h.startConsoleServer()
+  // 起独立实例。否则每个 harness 都会留下一个永不关闭的 server（原 close() 只清定时器+删临时目录），
+  // 多次 harness 串行后累积的残留 server 仍监听着、且临时目录已删，会劫持后续请求并在 handler
+  // 读文件时抛错/挂起（表现为 "request hung"）。只去掉自动调用，函数定义与 h.startConsoleServer 入口保留。
+  source = source.replace(/startConsoleServer\(\);/g, '/* harness: console server started per-test via h.startConsoleServer */');
   source = source.replace('  bot.onPrivateMessage(async (event) => {', `
   return {
     ensureSession, ensureSlangLearnerSession, resolvePresetName, deliverPrompt, drainPromptQueue,
@@ -523,8 +528,22 @@ export async function bridgeHarness({ config = {}, savedState, globals = {} } = 
   const bridge = await context.auditReady;
   bridge.setPresets(['standard', 'qq-chat', 'qq-chat-v2']);
   bridge.setReady(true);
+  // [HARNESS-FIX] 跟踪所有经 startConsoleServer 起来的 server，close() 时一并关闭，
+  // 杜绝残留 server 劫持后续 harness 请求并在临时目录删除后挂起（"request hung"）。
+  const consoleServers = new Set();
+  const origStartConsoleServer = bridge.startConsoleServer;
+  bridge.startConsoleServer = (...args) => {
+    const s = origStartConsoleServer(...args);
+    if (s && typeof s.on === 'function') {
+      consoleServers.add(s);
+      s.on('error', () => {}); // 吞掉端口冲突等 error，避免未捕获导致进程崩溃
+    }
+    return s;
+  };
   return { ...bridge, calls, temp, async close() {
     for (const timer of timers) clearTimeout(timer);
+    for (const s of consoleServers) { try { s.close(); } catch { /* 已关闭 */ } }
+    consoleServers.clear();
     fs.rmSync(temp, { recursive: true, force: true });
   } };
 }
