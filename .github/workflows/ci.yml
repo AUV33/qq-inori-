@@ -5,6 +5,13 @@ on:
     branches: [main]
   pull_request:
 
+# [SAFE-DELETE] 中和 CodeBuddy 注入的 node-safe-delete-shim：它把 fs.rmSync/unlinkSync 劫成
+# 「移回收站 + fork 子进程」，导致删除路径（含 bridge 回归 harness 的临时目录清理）每条消息同步
+# fork 一次，CPU 被 spawn 占满，进而让后续 console server 响应拖过 3s 超时（表现为 request hung）。
+# 关闭后 rmSync 恢复为常规即时删除，harness 稳定全绿；GitHub 托管 runner 无此 shim，本开关为 no-op。
+env:
+  CODEBUDDY_SAFE_DELETE_ENABLED: '0'
+
 jobs:
   test:
     name: Node ${{ matrix.node }} / ${{ matrix.os }}
