@@ -270,7 +270,17 @@ test('[JUDGE-WAKE] 弱指向 anyMessage + 本地3B判为无关 → 静默、不�
 test('[JUDGE-WAKE] 本地3B置信不足 → 回退原概率逻辑（不强制唤醒/静默）', async (t) => {
   t.mock.timers.enable({ apis: ['setTimeout'] });
   t.mock.method(Math, 'random', () => 0); // 概率判定：恒通过
-  const h = makeSched({ deps: { judgeWakeIntent: async () => ({ aboutHer: true, target: '你', confidence: 0.2 }) } });
+  // [CI-STABLE] 概率路径是否可达取决于 floor.reply 是否越过 minReply 门槛；
+  // decideFloor 对 anyMessage 默认 reply≈0.28，且凌晨（系统小时 0–7）会再 ×0.6 降到 0.168，
+  // 低于 FLOOR_DEFAULTS.minReply(0.22) 时会直接不开口、走不到 Math.random 那一步——
+  // 于是用例随 CI 机器本地钟点漂移。这里把 minReply 降到 0.05，让“回退原概率”路径稳定可达，
+  // 仍由 Math.random=0 决定唤醒（这正是本用例要验证的回退行为）。
+  const h = makeSched({
+    deps: {
+      judgeWakeIntent: async () => ({ aboutHer: true, target: '你', confidence: 0.2 }),
+      getTuning: () => ({ 'floor.minReply': 0.05 }),
+    },
+  });
   h.svc.scheduleWakeV2('group:1', 'anyMessage');
   await flush();
   assert.ok(h.st.pendingWakeTimer, '低置信时回退：随机通过则仍唤醒');
