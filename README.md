@@ -48,16 +48,15 @@ QQ  ←──►  SnowLuma（OneBot v11，第三方）  ←──►  qq-bridge 
 |---|---|
 | [`qq-bridge/`](qq-bridge/) | 消息路由、会话、人格、记忆、仿真、控制台、安全 MCP |
 | [`ai-companion-kit/`](ai-companion-kit/) | 记忆 / 日记 / 手机 / QQ 空间等扩展包（MIT） |
-| [`docs/`](docs/) | 架构、部署、发布与维护文档 |
 | `data/` | 运行期数据（默认不提交；见[数据与隐私](#数据与隐私)） |
 | `logs/`、`snowluma/` | 运行日志与第三方网关（默认不提交） |
 
-更细的模块、数据流和端口见 [docs/architecture.md](docs/architecture.md)。
+更细的模块、数据流和端口见 [`qq-bridge/README.md`](qq-bridge/README.md)。
 
 ## 快速开始
 
-> 完整步骤、配置项和排错见 **[docs/deployment.md](docs/deployment.md)**。
-> 下面是骨架，帮助你判断要不要继续。
+> 下面是从零部署的骨架，帮助你判断要不要继续。完整步骤与各配置项以本 README 与
+> [`qq-bridge/README.md`](qq-bridge/README.md) 为准。
 
 ### 要求
 
@@ -82,8 +81,7 @@ npm start                                 # 桥接；控制台 http://127.0.0.1:
 1. 先启动 DSH Web（3080）。
 2. 自行启动 SnowLuma，用**小号**扫码登录（不要用主号）。
 3. 把 SnowLuma 的 access token 填进 `config.json` 的 `snowluma.accessToken`。
-4. 人格卡：把 [`docs/examples/persona.example.md`](docs/examples/persona.example.md)
-   复制到 `qq-bridge/roles/`，在控制台「人格与角色」里选中。
+4. 人格卡：在 `qq-bridge/roles/` 放一个 `*.md` 人格卡（控制台「人格与角色」里选中）。
 5. 看到日志出现 `DSH 已就绪` 即成功。
 
 ### 启动脚本（示例）
@@ -96,7 +94,7 @@ npm start                                 # 桥接；控制台 http://127.0.0.1:
 | [`scripts/windows/start-all.bat.example`](scripts/windows/start-all.bat.example) | 拉起嵌入（可选）→ DSH → SnowLuma（自行启动）→ 桥接 |
 | [`scripts/windows/stop-all.bat.example`](scripts/windows/stop-all.bat.example) | 按端口停掉本项目默认监听 |
 
-开机自启请用任务计划/服务管理器自行配置；完整步骤见 [docs/deployment.md](docs/deployment.md)。
+开机自启请用任务计划/服务管理器自行配置。
 
 ## 配置
 
@@ -104,7 +102,7 @@ npm start                                 # 桥接；控制台 http://127.0.0.1:
 |---|---|
 | `qq-bridge/config.example.json` | 完整配置模板（模型、端口、白名单、模式、记忆、仿真） |
 | `qq-bridge/allowlist.example.txt` | 入口白名单格式；复制为 `allowlist.txt` 后生效 |
-| `docs/examples/persona.example.md` | 人格卡示例；复制到 `qq-bridge/roles/` |
+| `qq-bridge/roles/*.md` | 人格卡（放 `qq-bridge/roles/`，控制台选中） |
 | `qq-bridge/state/console-token` | 控制台令牌（首次启动自动生成，**不要提交**） |
 
 ## 本地模型（可选）
@@ -118,7 +116,7 @@ npm start                                 # 桥接；控制台 http://127.0.0.1:
 | bge-reranker-v2-m3 | 8792 | 记忆召回重排 | 按需 |
 | ONNX 情绪分类器 | 8793 | 3B 冷启动时兜底 | 按需 |
 
-细节和失败降级见 [docs/architecture.md](docs/architecture.md#本地模型)。
+细节和失败降级见 [`qq-bridge/README.md`](qq-bridge/README.md)。
 
 ## 数据与隐私
 
@@ -127,14 +125,13 @@ npm start                                 # 桥接；控制台 http://127.0.0.1:
 - 桥接只处理 `allowlist.txt` 里的会话；其余在入口丢弃。
 - 会出机的只有：DSH 里发给模型的内容、可选联网搜索的关键词，以及 SnowLuma 自己的协议流量。
 - 公开仓库里不要提交：`qq-bridge/config.json`、`state/`、`data/`、`logs/`、
-  `qq-bridge/roles/`、`qq-bridge/allowlist.txt`、`snowluma/`。详见 [docs/PUBLISHING.md](docs/PUBLISHING.md)。
+  `qq-bridge/roles/`、`qq-bridge/allowlist.txt`、`snowluma/`。
 
 ## 开源范围与第三方
 
 - 本仓库代码：**MIT**（见 [LICENSE](LICENSE)）。
 - `qq-bridge/`、`ai-companion-kit/` 各自也是 MIT。
-- **来源**：这两个目录分别是两个 MIT 上游项目的快照，之后在本仓库继续开发；上游版权声明保留在各自目录的 `LICENSE` 里，
-  快照版本、许可变更与核对结论见 [NOTICE.md](NOTICE.md)。
+- **来源**：这两个目录分别是两个 MIT 上游项目的快照，之后在本仓库继续开发；上游版权声明保留在各自目录的 `LICENSE` 里。
 - **SnowLuma 不在本仓库内**：它采用「源码可见非商业许可」，binary 与原生模块属专有组件，
   再分发/自动部署需要授权。请自行获取并遵守其 EULA；本项目只探测，不安装、不启动、不控制。
 - DSH 是外部运行时，不在本仓库内。
@@ -144,18 +141,13 @@ npm start                                 # 桥接；控制台 http://127.0.0.1:
 
 ## 文档
 
-| 文档 | 内容 |
-|---|---|
-| [docs/deployment.md](docs/deployment.md) | 从零部署、配置、端口、排错 |
-| [docs/architecture.md](docs/architecture.md) | 模块、消息流、记忆管线、本地模型（短版） |
-| [docs/architecture-full.md](docs/architecture-full.md) | 全栈架构与原理（含无本地模型的四档部署方案） |
-| [docs/ENGINEERING_DISCIPLINE.md](docs/ENGINEERING_DISCIPLINE.md) | 改动前必读：计划、接缝规则、验证、文档同步 |
-| [docs/README.md](docs/README.md) | 文档索引与写作约定 |
-| [docs/PUBLISHING.md](docs/PUBLISHING.md) | 开源发布检查单（维护者） |
-| [qq-bridge/README.md](qq-bridge/README.md) | 桥接的完整说明（中文） |
-| [qq-bridge/src/onebot/README.md](qq-bridge/src/onebot/README.md) | OneBot 入站/心跳适配层契约与测试 |
-| [qq-bridge/README.en.md](qq-bridge/README.en.md) | Bridge guide (English) |
-| [ai-companion-kit/README.md](ai-companion-kit/README.md) | 扩展包说明 |
+本开源仓库只包含代码与各子模块的 README；详细的架构、部署、发布与维护文档不在本仓库内
+（属维护者本机资料，未随仓库发布）。各模块说明见：
+
+- [qq-bridge/README.md](qq-bridge/README.md) — 桥接的完整说明（中文）
+- [qq-bridge/README.en.md](qq-bridge/README.en.md) — Bridge guide (English)
+- [qq-bridge/src/onebot/README.md](qq-bridge/src/onebot/README.md) — OneBot 入站/心跳适配层契约与测试
+- [ai-companion-kit/README.md](ai-companion-kit/README.md) — 扩展包说明
 
 ## 开发
 
@@ -170,7 +162,7 @@ npm run health        # 全栈健康检查
 ```
 
 约定：零新增运行时依赖（除非有明确理由）；先改测试再改行为；业务代码只放
-`qq-bridge/src/` 或 `ai-companion-kit/packages/*/src/`。见 [CONTRIBUTING.md](CONTRIBUTING.md)。
+`qq-bridge/src/` 或 `ai-companion-kit/packages/*/src/`。
 
 ## License
 

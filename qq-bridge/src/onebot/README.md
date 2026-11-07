@@ -84,4 +84,4 @@ node --test test/test-onebot-heartbeat.test.mjs # 8 项
 ## 变更记录
 
 - 2026-10-31：新增入站闸门与心跳看护；随后补 `message_id=0`、`message_sent` 回显、poke 幂等。
-  详见 `../../../docs/internal/变更记录.md`。
+  变更记录见各模块文件头注释与提交历史。

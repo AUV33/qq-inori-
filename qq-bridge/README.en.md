@@ -2,17 +2,15 @@
 
 > Connect QQ messages to DeepSeek Harness (DSH) agents: QQ friends/groups become DSH conversations, and agent replies (including questions and tool approvals) are sent back to QQ.
 
-> 📦 This directory is a snapshot of qq-bridge inside the QQ Inori repo. Full docs (`docs/guides/*`) and releases live upstream:
-> [Derpyu520/qq-bridge](https://github.com/Derpyu520/qq-bridge). For deployment inside QQ Inori, follow
-> [../docs/deployment.md](../docs/deployment.md).
+> 📦 This directory is a snapshot of qq-bridge inside the QQ Inori repo. Full docs and releases live upstream:
+> [Derpyu520/qq-bridge](https://github.com/Derpyu520/qq-bridge). For deployment inside QQ Inori, follow the root README "Quick start".
 
 > ⚠️ **Current version `v0.1.7` (per `package.json`); the last item-by-item verification was against DSH 0.1.5-rc.1 (v0.1.5)** — no live acceptance run after v0.1.6. It uses Cookie auth, slash RPC endpoints and the `/api/remote.mux` event stream — a protocol generation introduced in DSH `0.1.2-alpha.1`, incompatible with the older dot-endpoint protocol. On **DSH `0.1.1-rc.2` or earlier**, use tag [`v0.1.0`](https://github.com/Derpyu520/qq-bridge/releases/tag/v0.1.0) instead.
 >
 > The default branch `main` **is** this version — a plain `git clone` gets it, no branch switching needed.
 
-For the detailed Chinese architecture, see **[../docs/architecture-full.md](../docs/architecture-full.md)**.
-The documentation index (one line per doc, with "still current?" notes) is **[../docs/README.md](../docs/README.md)**;
-the document index is in **[../docs/README.md](../docs/README.md)**.
+For the detailed Chinese architecture, see this document's sections below.
+The documentation index lives in each subdirectory's README; the root README links them all.
 
 ## Architecture
 
@@ -25,7 +23,7 @@ QQ messages ──► SnowLuma (OneBot v11 WS) ──► qq-bridge ──► DSH
 - **QQ side**: `@snowluma/sdk` provides the OneBot v11 WebSocket client.
 - **DSH side**: adapted for DSH 0.1.2+ and re-verified on 0.1.5 — launch-token Cookie auth, `/api/<namespace>/<method>` slash RPC, and `/api/remote.mux` + `session/follow` event stream. The per-session model is pinned by the bridge via `session.selectModel` from `config.json`'s `dsh.model` (default `deepseek-flash` = DeepSeek-V41-Flash, multimodal).
 - **Agent tools**: safe MCP servers expose a restricted QQ toolset (`qq_status`, `qq_send_group_message`, `qq_reply`, v2 session-token tools such as `qq_get_active_members` / `qq_get_message_detail` / `qq_memory_*`, etc.) plus an admin-only host server (`snowluma_status`, task handoff and self-service boundary tools). Note: the legacy read-only tools (`qq_list_groups` / `qq_get_group_members` / `qq_get_group_history`) were removed in 2026-10, and the SnowLuma process-control tools (`start_snowluma` / `stop_snowluma`) were removed earlier (EULA §5.4 — the bridge probes the gateway but never deploys or controls the proprietary client).
-- **Console**: a local web console at `http://127.0.0.1:3100`, organised into ten task-based pages (Overview, Sessions & Approvals, Persona, Social v2, Social v1, Slang, Usage & Cost, Access & Security, Operations, Tool Reference) with cross-page feature search and a **light / dark theme** (one-click toggle in the header; follows the OS preference until you choose), for mode switching, role management, whitelist/admin settings, slang management, memory, stickers and more. The Persona page manages roles (view/edit/rename/duplicate/delete the prompt of each persona), shows and edits both prompt layers separately — the **simulation prompt** built into the preset (tool/behaviour protocol; synced to DSH, restart required) and the **persona prompt** (`roles/*.md`; applied immediately) — and sets the **DSH reasoning effort** (`max` by default, `high`/`low` selectable). The **Usage & Cost** page shows real-time token consumption and its price in CNY, broken down per group/friend and per conversation turn (see **[../docs/architecture-full.md](../docs/architecture-full.md)**).
+- **Console**: a local web console at `http://127.0.0.1:3100`, organised into ten task-based pages (Overview, Sessions & Approvals, Persona, Social v2, Social v1, Slang, Usage & Cost, Access & Security, Operations, Tool Reference) with cross-page feature search and a **light / dark theme** (one-click toggle in the header; follows the OS preference until you choose), for mode switching, role management, whitelist/admin settings, slang management, memory, stickers and more. The Persona page manages roles (view/edit/rename/duplicate/delete the prompt of each persona), shows and edits both prompt layers separately — the **simulation prompt** built into the preset (tool/behaviour protocol; synced to DSH, restart required) and the **persona prompt** (`roles/*.md`; applied immediately) — and sets the **DSH reasoning effort** (`max` by default, `high`/`low` selectable). The **Usage & Cost** page shows real-time token consumption and its price in CNY, broken down per group/friend and per conversation turn (see the root README "Quick start" and this document's audit section).
 
 ## Features
 
@@ -101,7 +99,7 @@ This installs:
 - `qq-mode-console` in the profile `package.json`
 - Default DSH mode set to `reserved2` (second-generation simulation), with a local `state/mode.json` fallback
 
-Then restart DSH. See **[../docs/deployment.md](../docs/deployment.md)** for details.
+Then restart DSH. See the root README "Quick start" for details.
 
 ## Security Notes
 
@@ -116,13 +114,6 @@ Then restart DSH. See **[../docs/deployment.md](../docs/deployment.md)** for det
 ```
 qq-bridge/
   config.example.json   # sanitized config template (real config.json is not in repo)
-  docs/
-    README.md           # documentation index (one line per doc + "still current?" notes)
-    guides/             # user/operator facing: PROJECT_GUIDE, DSH_SETUP, VOICE, TOKEN_USAGE_CONSOLE, CONSOLE-UI-TESTING
-    design/             # design & planning docs
-    research/           # investigation notes
-    audits/             # review / optimisation reports
-    legacy/             # archived docs that were superseded
   dsh/agent-presets/    # qq-chat / qq-chat-v2 DSH agent preset templates
   plugins/qq-mode-console  # DSH plugin: registers the qq-mode settings namespace (host half only; no UI card yet)
   src/                  # bridge core and MCP servers
@@ -140,7 +131,7 @@ lives in the sibling folder **`../voice-tool/`** — it only needs SnowLuma, and
 
 ## Testing
 
-`npm run test:audit` runs isolated regression tests without production credentials, DSH, or QQ messages. The detailed audit is in `docs/` (Chinese).
+`npm run test:audit` runs isolated regression tests without production credentials, DSH, or QQ messages. The detailed audit description is in this document (Chinese).
 
 After upgrading, legacy QQ session mappings without permission metadata are recreated once. Mode or preset changes also retire the old mapping and recreate the session on the next message; DSH history is retained.
 

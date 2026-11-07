@@ -6,7 +6,7 @@
 `qq-bridge` 直接以相对路径 import 这些包；只有带 MCP 服务器的包（`phone-mcp`、
 `memory-mcp`、`diary-mcp`、`qzone-mcp`）会被 DSH 以 stdio 方式单独拉起。
 
-> 来源说明见仓库根目录的 [NOTICE.md](../NOTICE.md)。
+> 来源说明见根目录与各子目录的 LICENSE 中的上游版权声明。
 
 ### 注册到 DSH（首次部署）
 
@@ -127,4 +127,4 @@ node packages/companion/examples/demo.js
 
 ## 许可
 
-MIT。版权与上游快照的来源见根目录 [NOTICE.md](../NOTICE.md)。
+MIT。版权与上游快照的来源见根目录与各子目录的 LICENSE。
