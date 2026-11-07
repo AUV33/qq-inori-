@@ -15,6 +15,11 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const BRIDGE = path.resolve(HERE, '..');
 const ROOT = path.resolve(BRIDGE, '..');
 
+const PUBLIC_DOCS_DIR = path.join(ROOT, 'docs');
+const hasPublicDocs = fs.existsSync(PUBLIC_DOCS_DIR);
+// [OPEN-SOURCE] 公开仓库通过 .gitignore 排除整个 docs/（仅留 README 与 LICENSE）。
+// docs/ 不存在时，公开文档要求整体跳过，仅保留不依赖 docs/ 的条目
+// （如 qq-bridge/src/onebot/README.md）；保留 docs/ 的仓库仍按原纪律强制这些文档存在。
 const REQUIRED_PUBLIC = [
   'docs/README.md',
   'docs/ENGINEERING_DISCIPLINE.md',
@@ -22,7 +27,7 @@ const REQUIRED_PUBLIC = [
   'docs/architecture-full.md',
   'docs/deployment.md',
   'qq-bridge/src/onebot/README.md',
-];
+].filter((p) => hasPublicDocs || !p.startsWith('docs/'));
 
 // docs/internal 在本机存在，但公开仓库被 .gitignore 排除；存在时才要求。
 // [DOCS-CONSOLIDATED] 2026-11-05：108 份内部文档合并为 10 份权威文档，
